@@ -62,7 +62,7 @@ const HomePage: React.FC = () => {
                             <article key={post._id} className="group flex flex-col h-full">
                                 <Link 
                                     to={`/posts/${post._id}`} 
-                                    className="block relative aspect-[16/10] rounded-2xl overflow-hidden mb-6 bg-gray-50 transition-all duration-500"
+                                    className="block relative aspect-[16/10] rounded-[1.5rem] overflow-hidden mb-6 bg-gray-50 transition-all duration-500 shadow-sm hover:shadow-2xl hover:shadow-primary/10"
                                 >
                                     {post.image ? (
                                         <img 
@@ -71,15 +71,16 @@ const HomePage: React.FC = () => {
                                             className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
                                         />
                                     ) : (
-                                        <div className="w-full h-full flex items-center justify-center opacity-30">
-                                            <BookOpen className="w-8 h-8 text-muted-foreground" />
+                                        <div className="w-full h-full flex items-center justify-center bg-gray-50/50">
+                                            <BookOpen className="w-8 h-8 text-muted-foreground/20" />
                                         </div>
                                     )}
-                                    <div className="absolute top-4 left-4">
-                                        <span className="bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-lg text-[8px] font-black uppercase tracking-widest text-primary shadow-sm border border-white/20">
+                                    <div className="absolute top-4 left-4 z-10">
+                                        <span className="bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-full text-[8px] font-black uppercase tracking-[0.2em] text-primary shadow-sm border border-white/50">
                                             {post.tags[0] || 'Story'}
                                         </span>
                                     </div>
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                 </Link>
                                 
                                 <div className="flex items-center gap-2.5 text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-4">
