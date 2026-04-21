@@ -1,0 +1,56 @@
+import { PostRepository } from "./post.repository.js";
+import { ApiError } from "../../common/errors/ApiError.js";
+import { ERROR_CODES } from "../../common/errors/errorCodes.js";
+import { buildMeta } from "../../common/utils/pagination.js";
+
+export const PostService = {
+    async createPost(data: any, authorId: string) {
+        return PostRepository.create({ ...data, author: authorId });
+    },
+
+    async getAllPosts(query: any, pagination: any) {
+        const { search, status, tags } = query;
+        const { skip, limit, page } = pagination;
+
+        const filter: any = {};
+        if (search) filter.title = { $regex: search, $options: "i" };
+        if (status) filter.status = status;
+        if (tags) filter.tags = { $in: tags.split(",") };
+
+        const posts = await PostRepository.findAll(filter, skip, limit);
+        const total = await PostRepository.count(filter);
+
+        return {
+            posts,
+            meta: buildMeta(total, page, limit),
+        };
+    },
+
+    async getPostById(id: string) {
+        const post = await PostRepository.findById(id);
+        if (!post) {
+            throw new ApiError(ERROR_CODES.NOT_FOUND, "Post not found");
+        }
+        return post;
+    },
+
+    async updatePost(id: string, userId: string, data: any) {
+        const post = await this.getPostById(id);
+
+        if (post.author._id.toString() !== userId) {
+            throw new ApiError(ERROR_CODES.FORBIDDEN, "You can only update your own posts");
+        }
+
+        return PostRepository.update(id, data);
+    },
+
+    async deletePost(id: string, userId: string) {
+        const post = await this.getPostById(id);
+
+        if (post.author._id.toString() !== userId) {
+            throw new ApiError(ERROR_CODES.FORBIDDEN, "You can only delete your own posts");
+        }
+
+        return PostRepository.delete(id);
+    },
+};
