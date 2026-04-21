@@ -28,4 +28,26 @@ export const PostRepository = {
     delete: (id: string) => {
         return Post.findByIdAndDelete(id);
     },
+
+    getStats: async () => {
+        return Post.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    totalPosts: { $sum: 1 },
+                    publishedPosts: {
+                        $sum: { $cond: [{ $eq: ["$status", "published"] }, 1, 0] },
+                    },
+                    draftPosts: {
+                        $sum: { $cond: [{ $eq: ["$status", "draft"] }, 1, 0] },
+                    },
+                },
+            },
+            {
+                $project: {
+                    _id: 0,
+                },
+            },
+        ]);
+    },
 };

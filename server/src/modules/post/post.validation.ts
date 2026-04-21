@@ -23,6 +23,15 @@ export const updatePostSchema = {
     }).min(1),
 };
 
+export const updatePostStatusSchema = {
+    params: Joi.object({
+        id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required(),
+    }),
+    body: Joi.object({
+        status: Joi.string().valid("draft", "published").required(),
+    }),
+};
+
 export const postQuerySchema = {
     query: Joi.object({
         page: Joi.number().integer().min(1),

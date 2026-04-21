@@ -14,6 +14,27 @@ export const PostService = {
 
         const filter: any = {};
         if (search) filter.title = { $regex: search, $options: "i" };
+        
+        // Default to published if no status provided (Public view)
+        filter.status = status || "published";
+        
+        if (tags) filter.tags = { $in: tags.split(",") };
+
+        const posts = await PostRepository.findAll(filter, skip, limit);
+        const total = await PostRepository.count(filter);
+
+        return {
+            posts,
+            meta: buildMeta(total, page, limit),
+        };
+    },
+
+    async getMyPosts(userId: string, query: any, pagination: any) {
+        const { search, status, tags } = query;
+        const { skip, limit, page } = pagination;
+
+        const filter: any = { author: userId };
+        if (search) filter.title = { $regex: search, $options: "i" };
         if (status) filter.status = status;
         if (tags) filter.tags = { $in: tags.split(",") };
 
@@ -44,6 +65,16 @@ export const PostService = {
         return PostRepository.update(id, data);
     },
 
+    async updatePostStatus(id: string, userId: string, status: string) {
+        const post = await this.getPostById(id);
+
+        if (post.author._id.toString() !== userId) {
+            throw new ApiError(ERROR_CODES.FORBIDDEN, "You can only update status of your own posts");
+        }
+
+        return PostRepository.update(id, { status });
+    },
+
     async deletePost(id: string, userId: string) {
         const post = await this.getPostById(id);
 
@@ -52,5 +83,10 @@ export const PostService = {
         }
 
         return PostRepository.delete(id);
+    },
+
+    async getPostStats() {
+        const stats = await PostRepository.getStats();
+        return stats[0] || { totalPosts: 0, publishedPosts: 0, draftPosts: 0 };
     },
 };
