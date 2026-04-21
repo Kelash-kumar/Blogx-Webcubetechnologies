@@ -18,6 +18,13 @@ router.get(
 
 router.get("/stats", PostController.getPostStats);
 
+router.get(
+    "/my",
+    authenticate,
+    validate(PostValidation.postQuerySchema),
+    PostController.getMyPosts
+);
+
 router.get("/:id", PostController.getPost);
 
 // Comment routes (nested under posts)
@@ -27,14 +34,7 @@ router.get(
     CommentController.getPostComments
 );
 
-// Protected routes
 router.use(authenticate);
-
-router.get(
-    "/my",
-    validate(PostValidation.postQuerySchema),
-    PostController.getMyPosts
-);
 
 router.post(
     "/",

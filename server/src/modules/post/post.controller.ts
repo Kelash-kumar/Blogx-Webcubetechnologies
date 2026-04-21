@@ -20,8 +20,9 @@ export const getPosts = asyncHandler(async (req: Request, res: Response) => {
 
 export const getMyPosts = asyncHandler(async (req: Request, res: Response) => {
     const pagination = parsePagination(req.query);
-    const { posts, meta } = await PostService.getMyPosts(req.user.id, req.query, pagination);
-    res.status(200).json(ApiResponse.paginated(posts, meta, "Your posts fetched successfully"));
+    // If admin, they can see all posts in management view
+    const { posts, meta } = await PostService.getMyPosts(req.user.id, req.user.role, req.query, pagination);
+    res.status(200).json(ApiResponse.paginated(posts, meta, "Posts fetched successfully"));
 });
 
 export const getPost = asyncHandler(async (req: Request, res: Response) => {
@@ -33,18 +34,18 @@ export const updatePost = asyncHandler(async (req: Request, res: Response) => {
     if (req.file) {
         req.body.image = `${req.protocol}://${req.get("host")}/uploads/posts/${req.file.filename}`;
     }
-    const post = await PostService.updatePost(req.params.id as string, req.user.id, req.body);
+    const post = await PostService.updatePost(req.params.id as string, req.user.id, req.user.role, req.body);
     res.status(200).json(ApiResponse.ok(post, "Post updated successfully"));
 });
 
 export const updatePostStatus = asyncHandler(async (req: Request, res: Response) => {
     const { status } = req.body;
-    const post = await PostService.updatePostStatus(req.params.id as string, req.user.id, status);
+    const post = await PostService.updatePostStatus(req.params.id as string, req.user.id, req.user.role, status);
     res.status(200).json(ApiResponse.ok(post, `Post status updated to ${status}`));
 });
 
 export const deletePost = asyncHandler(async (req: Request, res: Response) => {
-    await PostService.deletePost(req.params.id as string, req.user.id);
+    await PostService.deletePost(req.params.id as string, req.user.id, req.user.role);
     res.status(200).json(ApiResponse.ok(null, "Post deleted successfully"));
 });
 

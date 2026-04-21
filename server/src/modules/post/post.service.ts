@@ -29,11 +29,13 @@ export const PostService = {
         };
     },
 
-    async getMyPosts(userId: string, query: any, pagination: any) {
+    async getMyPosts(userId: string, role: string, query: any, pagination: any) {
         const { search, status, tags } = query;
         const { skip, limit, page } = pagination;
 
-        const filter: any = { author: userId };
+        // If admin, show all posts. If author, only show theirs.
+        const filter: any = role === "admin" ? {} : { author: userId };
+        
         if (search) filter.title = { $regex: search, $options: "i" };
         if (status) filter.status = status;
         if (tags) filter.tags = { $in: tags.split(",") };
@@ -55,30 +57,31 @@ export const PostService = {
         return post;
     },
 
-    async updatePost(id: string, userId: string, data: any) {
+    async updatePost(id: string, userId: string, role: string, data: any) {
         const post = await this.getPostById(id);
 
-        if (post.author._id.toString() !== userId) {
+        // Admin can update anything, author can only update their own
+        if (role !== "admin" && post.author._id.toString() !== userId) {
             throw new ApiError(ERROR_CODES.FORBIDDEN, "You can only update your own posts");
         }
 
         return PostRepository.update(id, data);
     },
 
-    async updatePostStatus(id: string, userId: string, status: string) {
+    async updatePostStatus(id: string, userId: string, role: string, status: string) {
         const post = await this.getPostById(id);
 
-        if (post.author._id.toString() !== userId) {
+        if (role !== "admin" && post.author._id.toString() !== userId) {
             throw new ApiError(ERROR_CODES.FORBIDDEN, "You can only update status of your own posts");
         }
 
         return PostRepository.update(id, { status });
     },
 
-    async deletePost(id: string, userId: string) {
+    async deletePost(id: string, userId: string, role: string) {
         const post = await this.getPostById(id);
 
-        if (post.author._id.toString() !== userId) {
+        if (role !== "admin" && post.author._id.toString() !== userId) {
             throw new ApiError(ERROR_CODES.FORBIDDEN, "You can only delete your own posts");
         }
 

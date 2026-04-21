@@ -11,13 +11,13 @@ export const authenticate = (
     next: NextFunction
 ) => {
     const authHeader = req.headers.authorization;
+    let token = "";
 
-    // 1. Check for missing header or incorrect format
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        return next(new ApiError(ERROR_CODES.UNAUTHORIZED, "Access token required"));
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+        token = authHeader.split(" ")[1] as string;
+    } else if (req.cookies && req.cookies.accessToken) {
+        token = req.cookies.accessToken;
     }
-
-    const token = authHeader.split(" ")[1];
 
     if (!token) {
         return next(new ApiError(ERROR_CODES.UNAUTHORIZED, "Access token required"));
