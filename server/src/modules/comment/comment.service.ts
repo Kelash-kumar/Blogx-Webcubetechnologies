@@ -30,26 +30,32 @@ export const CommentService = {
         };
     },
 
-    async updateComment(commentId: string, userId: string, content: string) {
+    async updateComment(commentId: string, userId: string, _role: string, content: string) {
         const comment = await CommentRepository.findById(commentId);
         if (!comment) {
             throw new ApiError(ERROR_CODES.NOT_FOUND, "Comment not found");
         }
 
-        if (comment.author._id.toString() !== userId) {
+        // Handle both populated and unpopulated author field
+        const authorId = comment.author._id ? comment.author._id.toString() : comment.author.toString();
+
+        if (authorId !== userId) {
             throw new ApiError(ERROR_CODES.FORBIDDEN, "You can only edit your own comments");
         }
 
         return CommentRepository.update(commentId, content);
     },
 
-    async deleteComment(commentId: string, userId: string) {
+    async deleteComment(commentId: string, userId: string, _role: string) {
         const comment = await CommentRepository.findById(commentId);
         if (!comment) {
             throw new ApiError(ERROR_CODES.NOT_FOUND, "Comment not found");
         }
 
-        if (comment.author._id.toString() !== userId) {
+        // Handle both populated and unpopulated author field
+        const authorId = comment.author._id ? comment.author._id.toString() : comment.author.toString();
+
+        if (authorId !== userId) {
             throw new ApiError(ERROR_CODES.FORBIDDEN, "You can only delete your own comments");
         }
 

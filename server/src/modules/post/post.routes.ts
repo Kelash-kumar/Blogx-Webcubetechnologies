@@ -16,7 +16,7 @@ router.get(
     PostController.getPosts
 );
 
-router.get("/stats", PostController.getPostStats);
+router.get("/stats", authenticate, PostController.getPostStats);
 
 router.get(
     "/my",

@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { PostRepository } from "./post.repository.js";
 import { ApiError } from "../../common/errors/ApiError.js";
 import { ERROR_CODES } from "../../common/errors/errorCodes.js";
@@ -14,10 +15,10 @@ export const PostService = {
 
         const filter: any = {};
         if (search) filter.title = { $regex: search, $options: "i" };
-        
+
         // Default to published if no status provided (Public view)
         filter.status = status || "published";
-        
+
         if (tags) filter.tags = { $in: tags.split(",") };
 
         const posts = await PostRepository.findAll(filter, skip, limit);
@@ -33,9 +34,16 @@ export const PostService = {
         const { search, status, tags } = query;
         const { skip, limit, page } = pagination;
 
-        // If admin, show all posts. If author, only show theirs.
-        const filter: any = role === "admin" ? {} : { author: userId };
-        
+        const filter: any = role === "admin"
+            ? {
+                $or: [
+                    { author: userId },
+                    { status: "published" }
+                ]
+            }
+            : { author: userId };
+
+        // Apply additional query filters
         if (search) filter.title = { $regex: search, $options: "i" };
         if (status) filter.status = status;
         if (tags) filter.tags = { $in: tags.split(",") };
@@ -88,8 +96,9 @@ export const PostService = {
         return PostRepository.delete(id);
     },
 
-    async getPostStats() {
-        const stats = await PostRepository.getStats();
+    async getPostStats(userId: string, role: string) {
+        const filter: any = role === "admin" ? {} : { author: new mongoose.Types.ObjectId(userId) };
+        const stats = await PostRepository.getStats(filter);
         return stats[0] || { totalPosts: 0, publishedPosts: 0, draftPosts: 0 };
     },
 };

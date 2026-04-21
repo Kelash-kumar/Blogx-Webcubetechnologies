@@ -4,16 +4,20 @@ import { usePosts } from "../../hooks/usePosts";
 import { PostForm } from "../../components/posts/PostForm";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import toast from "react-hot-toast";
 
 const CreatePostPage: React.FC = () => {
     const navigate = useNavigate();
     const { createPost } = usePosts();
 
     const handleSubmit = async (formData: FormData) => {
+        const loadingToast = toast.loading("Saving your story...");
         try {
             await createPost.mutateAsync(formData);
+            toast.success("Article created successfully!", { id: loadingToast });
             navigate("/dashboard/posts");
-        } catch (error) {
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || "Failed to create article.", { id: loadingToast });
             console.error("Failed to create post", error);
         }
     };

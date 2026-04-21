@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext";
 import ErrorBoundary from "./components/common/ErrorBoundary";
 import { Loader2 } from "lucide-react";
+import { Toaster } from "react-hot-toast";
 
 // Layouts
 import { PublicLayout } from "./components/layouts/PublicLayout";
@@ -24,9 +25,9 @@ const PostDetailPage = lazy(() => import("./pages/posts/PostDetailPage"));
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
-            refetchOnWindowFocus: false,
-            retry: 1,
-            staleTime: 5 * 60 * 1000,
+            refetchOnWindowFocus: false, // this mean that when i switch to another tab and come back it will not refetch the data
+            retry: 1, // this mean that if the data is not fetched it will retry 1 time
+            staleTime: 5 * 60 * 1000, // this mean that the data will be considered stale after 5 minutes
         },
     },
 });
@@ -44,6 +45,13 @@ const App: React.FC = () => {
         <QueryClientProvider client={queryClient}>
             <AuthProvider>
                 <Router>
+                    <Toaster 
+                        position="top-right"
+                        toastOptions={{
+                            className: 'font-sans text-xs font-black uppercase tracking-widest border border-gray-100 rounded-2xl shadow-xl shadow-gray-100/20 px-6 py-4',
+                            duration: 4000,
+                        }}
+                    />
                     <ErrorBoundary>
                         <Suspense fallback={<PageLoader />}>
                             <Routes>

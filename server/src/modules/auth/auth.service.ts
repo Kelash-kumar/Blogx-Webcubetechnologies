@@ -30,7 +30,7 @@ export const AuthService = {
             username,
             email,
             password: hashedPassword,
-            role: "author", // Always register as author
+            role: data.role || "author", 
         });
 
         return {

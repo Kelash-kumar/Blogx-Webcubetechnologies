@@ -135,13 +135,8 @@ export const PostForm: React.FC<PostFormProps> = ({ initialData, onSubmit, isLoa
                 </div>
 
                 {/* 5. Options Row at Bottom */}
-                <div className="bg-gray-50/50 border-t border-gray-100 p-8 md:px-14 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                        <Clock className="w-4 h-4 opacity-40" />
-                        <span className="text-[10px] font-black uppercase tracking-widest">Draft will be saved automatically</span>
-                    </div>
-                    
-                    <div className="flex items-center gap-3 w-full sm:w-auto">
+                <div className="border-t border-gray-100 p-8 md:px-14 flex flex-col sm:flex-row items-center justify-end gap-4">
+                    <div className="flex items-center gap-5 w-full sm:w-auto">
                         <Button
                             type="submit"
                             variant="outline"

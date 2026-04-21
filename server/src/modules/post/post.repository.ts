@@ -29,8 +29,9 @@ export const PostRepository = {
         return Post.findByIdAndDelete(id);
     },
 
-    getStats: async () => {
+    getStats: async (filter: any = {}) => {
         return Post.aggregate([
+            { $match: filter },
             {
                 $group: {
                     _id: null,

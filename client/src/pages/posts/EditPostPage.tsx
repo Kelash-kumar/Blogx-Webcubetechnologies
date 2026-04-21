@@ -5,6 +5,7 @@ import { usePost } from "../../hooks/usePost";
 import { PostForm } from "../../components/posts/PostForm";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import toast from "react-hot-toast";
 
 const EditPostPage: React.FC = () => {
     const { id } = useParams();
@@ -14,10 +15,13 @@ const EditPostPage: React.FC = () => {
 
     const handleSubmit = async (formData: FormData) => {
         if (!id) return;
+        const loadingToast = toast.loading("Updating your article...");
         try {
             await updatePost.mutateAsync({ id, formData });
+            toast.success("Changes saved successfully!", { id: loadingToast });
             navigate("/dashboard/posts");
-        } catch (error) {
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || "Failed to update article.", { id: loadingToast });
             console.error("Failed to update post", error);
         }
     };

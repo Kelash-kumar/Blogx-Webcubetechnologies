@@ -18,11 +18,11 @@ export const getPostComments = asyncHandler(async (req: Request, res: Response) 
 });
 
 export const updateComment = asyncHandler(async (req: Request, res: Response) => {
-    const comment = await CommentService.updateComment(req.params.id as string, req.user.id, req.body.content);
+    const comment = await CommentService.updateComment(req.params.id as string, req.user.id, req.user.role, req.body.content);
     res.status(200).json(ApiResponse.ok(comment, "Comment updated successfully"));
 });
 
 export const deleteComment = asyncHandler(async (req: Request, res: Response) => {
-    await CommentService.deleteComment(req.params.id as string, req.user.id);
+    await CommentService.deleteComment(req.params.id as string, req.user.id, req.user.role);
     res.status(200).json(ApiResponse.ok(null, "Comment deleted successfully"));
 });

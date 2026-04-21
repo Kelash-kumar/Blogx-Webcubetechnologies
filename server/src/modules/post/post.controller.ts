@@ -49,7 +49,7 @@ export const deletePost = asyncHandler(async (req: Request, res: Response) => {
     res.status(200).json(ApiResponse.ok(null, "Post deleted successfully"));
 });
 
-export const getPostStats = asyncHandler(async (_req: Request, res: Response) => {
-    const stats = await PostService.getPostStats();
+export const getPostStats = asyncHandler(async (req: Request, res: Response) => {
+    const stats = await PostService.getPostStats(req.user.id, req.user.role);
     res.status(200).json(ApiResponse.ok(stats, "Post statistics fetched successfully"));
 });

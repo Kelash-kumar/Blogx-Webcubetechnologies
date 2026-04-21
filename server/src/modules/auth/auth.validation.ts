@@ -9,7 +9,7 @@ export const registerSchema = {
             .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
             .message('Password must contain uppercase, lowercase, and a number')
             .required(),
-        role: Joi.string().valid('admin', 'author').default('author'),
+        role: Joi.string().valid('author').default('author'),
     }),
 };
 

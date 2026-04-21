@@ -26,6 +26,7 @@ export const usePosts = (filters: PostFilters = {}) => {
         mutationFn: (formData: FormData) => postService.createPost(formData),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["posts"] });
+            queryClient.invalidateQueries({ queryKey: ["my-posts"] });
             queryClient.invalidateQueries({ queryKey: ["post-stats"] });
         },
     });
@@ -36,6 +37,8 @@ export const usePosts = (filters: PostFilters = {}) => {
             postService.updatePost(id, formData),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["posts"] });
+            queryClient.invalidateQueries({ queryKey: ["my-posts"] });
+            queryClient.invalidateQueries({ queryKey: ["post-stats"] });
         },
     });
 
@@ -44,6 +47,7 @@ export const usePosts = (filters: PostFilters = {}) => {
         mutationFn: (id: string) => postService.deletePost(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["posts"] });
+            queryClient.invalidateQueries({ queryKey: ["my-posts"] });
             queryClient.invalidateQueries({ queryKey: ["post-stats"] });
         },
     });

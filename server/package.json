@@ -7,7 +7,8 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "build:watch": "tsc -w",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "seed:admin": "tsx src/database/seeders/admin.seeder.ts"
   },
   "keywords": [],
   "author": "",
