@@ -5,10 +5,10 @@ export const PostRepository = {
         return Post.create(data);
     },
 
-    findAll: (filter: any, skip: number, limit: number) => {
+    findAll: (filter: any, skip: number, limit: number, sortBy: string = "createdAt", order: number = -1) => {
         return Post.find(filter)
             .populate("author", "name username avatar")
-            .sort({ createdAt: -1 })
+            .sort({ [sortBy]: order as any })
             .skip(skip)
             .limit(limit);
     },

@@ -8,6 +8,7 @@ import { Layout, Mail, Lock, User, Loader2, AlertCircle, CheckCircle2 } from "lu
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { authService } from "@/services/auth.service";
 
 const registerSchema = z.object({
     name: z.string().min(2, "Name is too short"),
@@ -32,8 +33,8 @@ const RegisterPage: React.FC = () => {
         setIsLoading(true);
         setError(null);
         try {
-            const response = await api.post("/auth/register", data);
-            if (response.data.success) {
+            const response = await authService.register(data);
+            if (response.success) {
                 setIsSuccess(true);
                 setTimeout(() => navigate("/login"), 2000);
             }

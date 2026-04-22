@@ -13,7 +13,8 @@ import {
     SearchX,
     Loader2,
     BookOpen,
-    RefreshCcw
+    RefreshCcw,
+    ArrowUpDown
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import dayjs from "dayjs";
@@ -26,6 +27,9 @@ const PostListPage: React.FC = () => {
     const [page, setPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
+    const [status, setStatus] = useState<string>("");
+    const [sortBy, setSortBy] = useState<string>("createdAt");
+    const [order, setOrder] = useState<"asc" | "desc">("desc");
 
     const isAdmin = user?.role === "admin";
 
@@ -40,8 +44,15 @@ const PostListPage: React.FC = () => {
         setPage(1);
     }, [debouncedSearch]);
 
-    // Dashboard list always uses the management endpoint (which backend filters by role)
-    const postsHook = useMyPosts({ page, limit: 10, search: searchQuery });
+    // Dashboard list always uses the management endpoint
+    const postsHook = useMyPosts({ 
+        page, 
+        limit: 10, 
+        search: searchQuery, 
+        status: status || undefined,
+        sortBy,
+        order
+    });
 
     const { posts, pagination, isLoading, refetch } = postsHook;
     const { deletePost } = usePosts();
@@ -70,27 +81,62 @@ const PostListPage: React.FC = () => {
                 </Link>
             </div>
 
-            {/* Clean Flat Search with Refresh */}
-            <div className="flex items-center gap-3">
+            {/* Filters Row */}
+            <div className="flex flex-wrap items-center gap-4">
                 <div className="relative group max-w-sm flex-1">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/30 h-3.5 w-3.5" />
                     <Input 
                         type="text" 
                         value={searchTerm}
                         onChange={handleSearchChange}
-                        placeholder="Quick search..." 
+                        placeholder="Search title..." 
                         className="pl-9 h-10 border-gray-100 bg-gray-50/30 rounded-xl focus:bg-white text-xs font-medium transition-all"
                     />
                 </div>
-                <Button 
-                    variant="outline" 
-                    size="icon" 
-                    onClick={() => refetch()}
-                    className={`h-10 w-10 rounded-xl border-gray-100 bg-gray-50/30 hover:bg-white transition-all ${isLoading ? 'opacity-50' : ''}`}
-                    disabled={isLoading}
-                >
-                    <RefreshCcw className={`w-3.5 h-3.5 text-muted-foreground/60 ${isLoading ? 'animate-spin' : ''}`} />
-                </Button>
+
+                <div className="flex items-center gap-2">
+                    <select 
+                        value={status} 
+                        onChange={(e) => { setStatus(e.target.value); setPage(1); }}
+                        className="h-10 px-3 bg-gray-50/30 border border-gray-100 rounded-xl text-[10px] font-black uppercase tracking-widest outline-none focus:bg-white transition-all"
+                    >
+                        <option value="">All Status</option>
+                        <option value="published">Published</option>
+                        <option value="draft">Drafts</option>
+                    </select>
+
+                    <select 
+                        value={sortBy} 
+                        onChange={(e) => { setSortBy(e.target.value); setPage(1); }}
+                        className="h-10 px-3 bg-gray-50/30 border border-gray-100 rounded-xl text-[10px] font-black uppercase tracking-widest outline-none focus:bg-white transition-all"
+                    >
+                        <option value="createdAt">Date Created</option>
+                        <option value="title">Alphabetical</option>
+                        <option value="status">By Status</option>
+                    </select>
+
+                    <Button 
+                        variant="outline" 
+                        size="icon" 
+                        onClick={() => setOrder(o => o === "asc" ? "desc" : "asc")}
+                        title={order === 'asc' ? "Sort Descending" : "Sort Ascending"}
+                        className="h-10 w-10 rounded-xl border-gray-100 bg-gray-50/30 hover:bg-white transition-all"
+                    >
+                        <ArrowUpDown className={`w-3.5 h-3.5 text-muted-foreground/60 ${order === 'asc' ? 'rotate-180' : ''} transition-transform duration-300`} />
+                    </Button>
+
+                    <div className="w-px h-6 bg-gray-100 mx-1" />
+
+                    <Button 
+                        variant="outline" 
+                        size="icon" 
+                        onClick={() => refetch()}
+                        className={`h-10 w-10 rounded-xl border-gray-100 bg-gray-50/30 hover:bg-white transition-all ${isLoading ? 'opacity-50' : ''}`}
+                        disabled={isLoading}
+                    >
+                        <RefreshCcw className={`w-3.5 h-3.5 text-muted-foreground/60 ${isLoading ? 'animate-spin' : ''}`} />
+                    </Button>
+                </div>
             </div>
 
             {/* Simple Table with Proper Light Border */}

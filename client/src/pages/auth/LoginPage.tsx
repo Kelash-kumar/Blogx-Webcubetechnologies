@@ -9,6 +9,7 @@ import { Layout, Mail, Lock, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { authService } from "@/services/auth.service";
 
 const loginSchema = z.object({
     email: z.string().email("Invalid email address"),
@@ -34,9 +35,9 @@ const LoginPage: React.FC = () => {
         setIsLoading(true);
         setError(null);
         try {
-            const response = await api.post("/auth/login", data);
-            if (response.data.success) {
-                login(response.data.data);
+            const response = await authService.login(data);
+            if (response.success) {
+                login(response.data);
                 navigate(from, { replace: true });
             }
         } catch (err: any) {

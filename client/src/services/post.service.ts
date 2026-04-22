@@ -7,6 +7,8 @@ export interface PostFilters {
     search?: string;
     status?: string;
     tags?: string;
+    sortBy?: string;
+    order?: "asc" | "desc";
 }
 
 export const postService = {

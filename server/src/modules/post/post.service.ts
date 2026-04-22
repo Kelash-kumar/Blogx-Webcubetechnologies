@@ -11,7 +11,7 @@ export const PostService = {
 
     async getAllPosts(query: any, pagination: any) {
         const { search, status, tags } = query;
-        const { skip, limit, page } = pagination;
+        const { skip, limit, page, sortBy, order } = pagination;
 
         const filter: any = {};
         if (search) filter.title = { $regex: search, $options: "i" };
@@ -21,7 +21,7 @@ export const PostService = {
 
         if (tags) filter.tags = { $in: tags.split(",") };
 
-        const posts = await PostRepository.findAll(filter, skip, limit);
+        const posts = await PostRepository.findAll(filter, skip, limit, sortBy, order);
         const total = await PostRepository.count(filter);
 
         return {
@@ -32,7 +32,7 @@ export const PostService = {
 
     async getMyPosts(userId: string, role: string, query: any, pagination: any) {
         const { search, status, tags } = query;
-        const { skip, limit, page } = pagination;
+        const { skip, limit, page, sortBy, order } = pagination;
 
         const filter: any = role === "admin"
             ? {
@@ -48,7 +48,7 @@ export const PostService = {
         if (status) filter.status = status;
         if (tags) filter.tags = { $in: tags.split(",") };
 
-        const posts = await PostRepository.findAll(filter, skip, limit);
+        const posts = await PostRepository.findAll(filter, skip, limit, sortBy, order);
         const total = await PostRepository.count(filter);
 
         return {
