@@ -14,3 +14,5 @@ export interface PaginationMeta {
     hasPrev: boolean;
     limit: number;
 }
+
+export type PaginatedResponse<T> = ApiResponse<T[]>;

@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import type { Post } from "../../types/post.types";
-import { Image as ImageIcon, X, Tag, FileText, CheckCircle, Clock, Loader2 } from "lucide-react";
+import { Image as ImageIcon, X, Tag, CheckCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";

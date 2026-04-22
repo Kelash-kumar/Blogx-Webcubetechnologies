@@ -4,11 +4,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import api from "../../api/axios";
 import { Layout, Mail, Lock, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { authService } from "@/services/auth.service";
 
 const loginSchema = z.object({

@@ -1,4 +1,4 @@
-import { MessageSquare, Send, Trash2, Loader2, User as UserIcon, CornerDownRight, Reply as ReplyIcon } from "lucide-react";
+import { MessageSquare, Send, Trash2, Loader2, User as UserIcon, Reply as ReplyIcon } from "lucide-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Button } from "@/components/ui/button";
@@ -7,20 +7,10 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { useComments } from "@/hooks/useComments";
 import { useState } from "react";
+import type { Comment } from "@/types/comment.types";
 
 dayjs.extend(relativeTime);
 
-interface Comment {
-    _id: string;
-    content: string;
-    author: {
-        _id: string;
-        name: string;
-        avatar?: string;
-    };
-    parentComment: string | null;
-    createdAt: string;
-}
 
 interface CommentSectionProps {
     postId: string;
@@ -169,7 +159,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
         await addComment.mutateAsync({ content: replyContent, parentCommentId });
     };
 
-    const topLevelComments = (comments as Comment[]).filter(c => !c.parentComment);
+    const topLevelComments = comments.filter(c => !c.parentComment);
 
     return (
         <div className="space-y-12">
@@ -229,7 +219,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
                         <CommentItem 
                             key={comment._id} 
                             comment={comment} 
-                            allComments={comments as Comment[]}
+                            allComments={comments}
                             user={user}
                             onReply={handleReply}
                             onDelete={(id) => deleteComment.mutateAsync(id)}

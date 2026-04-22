@@ -6,6 +6,7 @@ export interface Comment {
     content: string;
     post: string;
     author: User;
+    parentComment?: string | null;
     createdAt: string;
     updatedAt: string;
 }

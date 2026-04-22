@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import { Layout, Menu, X, User } from "lucide-react";
+import { Layout, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const PublicLayout: React.FC = () => {
