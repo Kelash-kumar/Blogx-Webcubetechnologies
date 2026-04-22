@@ -5,9 +5,9 @@ import { ApiResponse } from "../../common/utils/apiResponse.js";
 import { parsePagination } from "../../common/utils/pagination.js";
 
 export const addComment = asyncHandler(async (req: Request, res: Response) => {
-    const { content } = req.body;
+    const { content, parentCommentId } = req.body;
     const postId = (req.params.postId || req.body.postId) as string;
-    const comment = await CommentService.addComment(postId, req.user.id, content);
+    const comment = await CommentService.addComment(postId, req.user.id, content, parentCommentId);
     res.status(201).json(ApiResponse.ok(comment, "Comment added successfully"));
 });
 

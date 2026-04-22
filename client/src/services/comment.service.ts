@@ -9,10 +9,11 @@ export const commentService = {
         return response.data;
     },
 
-    addComment: async (postId: string, content: string): Promise<SingleCommentResponse> => {
+    addComment: async (postId: string, content: string, parentCommentId?: string): Promise<SingleCommentResponse> => {
         const response = await api.post<SingleCommentResponse>("/comments", {
             postId,
-            content
+            content,
+            parentCommentId
         });
         return response.data;
     },

@@ -5,16 +5,24 @@ import { ERROR_CODES } from "../../common/errors/errorCodes.js";
 import { buildMeta } from "../../common/utils/pagination.js";
 
 export const CommentService = {
-    async addComment(postId: string, authorId: string, content: string) {
+    async addComment(postId: string, authorId: string, content: string, parentCommentId?: string) {
         const post = await PostRepository.findById(postId);
         if (!post) {
             throw new ApiError(ERROR_CODES.NOT_FOUND, "Post not found");
+        }
+
+        if (parentCommentId) {
+            const parent = await CommentRepository.findById(parentCommentId);
+            if (!parent) {
+                throw new ApiError(ERROR_CODES.NOT_FOUND, "Parent comment not found");
+            }
         }
 
         return CommentRepository.create({
             content,
             post: postId,
             author: authorId,
+            parentComment: parentCommentId || null,
         });
     },
 

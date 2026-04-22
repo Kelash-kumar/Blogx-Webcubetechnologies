@@ -12,7 +12,8 @@ export const useComments = (postId: string, page = 1) => {
     });
 
     const addComment = useMutation({
-        mutationFn: (content: string) => commentService.addComment(postId, content),
+        mutationFn: ({ content, parentCommentId }: { content: string, parentCommentId?: string }) => 
+            commentService.addComment(postId, content, parentCommentId),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["comments", postId] });
             toast.success("Comment posted!");

@@ -9,6 +9,7 @@ export const createCommentSchema = {
     body: Joi.object({
         content: Joi.string().trim().min(1).max(500).required(),
         postId: Joi.string().pattern(objectIdPattern),
+        parentCommentId: Joi.string().pattern(objectIdPattern).optional(),
     }),
 };
 
