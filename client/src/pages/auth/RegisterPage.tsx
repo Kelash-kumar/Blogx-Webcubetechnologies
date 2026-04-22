@@ -11,10 +11,10 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { authService } from "@/services/auth.service";
 
 const registerSchema = z.object({
-    name: z.string().min(2, "Name is too short"),
-    username: z.string().min(3, "Username is too short").regex(/^[a-zA-Z0-9_]+$/, "Alpha-numeric only"),
-    email: z.string().email("Invalid email"),
-    password: z.string().min(6, "6+ characters required"),
+    name: z.string().min(1, "Name is required").min(2, "Name is too short"),
+    username: z.string().min(1, "Username is required").min(3, "Username is too short").regex(/^[a-zA-Z0-9_]+$/, "Alpha-numeric only"),
+    email: z.string().min(1, "Email is required").email("Invalid email"),
+    password: z.string().min(1, "Password is required").min(6, "6+ characters required"),
 });
 
 type RegisterForm = z.infer<typeof registerSchema>;
