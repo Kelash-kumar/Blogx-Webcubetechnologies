@@ -5,9 +5,11 @@ import { Calendar, ArrowLeft, Clock, Share2, Bookmark } from "lucide-react";
 import dayjs from "dayjs";
 import { Button } from "@/components/ui/button";
 import { CommentSection } from "../../components/posts/CommentSection";
+import { useAuth } from "../../contexts/AuthContext";
 
 const PostDetailPage: React.FC = () => {
     const { id } = useParams();
+    const { user } = useAuth();
     const { data: post, isLoading } = usePost(id);
 
     if (isLoading) {
@@ -108,25 +110,27 @@ const PostDetailPage: React.FC = () => {
                 </div>
 
                 {/* Footer Section */}
-                <footer className="mt-24 pt-16 border-t border-gray-100">
-                    <div className="bg-gray-50/50 rounded-[2.5rem] p-8 md:p-12 text-center space-y-8">
-                        <div className="space-y-2">
-                            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Continue Exploring</p>
-                            <h3 className="text-2xl font-black text-foreground">Join the BlogX Community</h3>
-                            <p className="text-sm text-muted-foreground font-medium max-w-sm mx-auto">
-                                Subscribe to discover more thought-provoking stories and insights from our community of writers.
-                            </p>
+                {!user && (
+                    <footer className="mt-24 pt-16 border-t border-gray-100">
+                        <div className="bg-gray-50/50 rounded-[2.5rem] p-8 md:p-12 text-center space-y-8">
+                            <div className="space-y-2">
+                                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Continue Exploring</p>
+                                <h3 className="text-2xl font-black text-foreground">Join the BlogX Community</h3>
+                                <p className="text-sm text-muted-foreground font-medium max-w-sm mx-auto">
+                                    Subscribe to discover more thought-provoking stories and insights from our community of writers.
+                                </p>
+                            </div>
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                                <Link to="/register">
+                                    <Button className="rounded-full px-10 h-12 font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20">Create Account</Button>
+                                </Link>
+                                <Link to="/">
+                                    <Button variant="outline" className="rounded-full px-10 h-12 font-black text-xs uppercase tracking-widest border-gray-200">Return to Feed</Button>
+                                </Link>
+                            </div>
                         </div>
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                            <Link to="/register">
-                                <Button className="rounded-full px-10 h-12 font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20">Create Account</Button>
-                            </Link>
-                            <Link to="/">
-                                <Button variant="outline" className="rounded-full px-10 h-12 font-black text-xs uppercase tracking-widest border-gray-200">Return to Feed</Button>
-                            </Link>
-                        </div>
-                    </div>
-                </footer>
+                    </footer>
+                )}
             </article>
         </div>
     );

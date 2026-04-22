@@ -31,11 +31,17 @@ export const PublicLayout: React.FC = () => {
                             <div className="w-px h-4 bg-gray-200 mx-2" />
 
                             {user ? (
-                                <Link to="/dashboard">
-                                    <Button variant="default" size="sm" className="rounded-full font-bold px-5">
-                                        Dashboard
-                                    </Button>
-                                </Link>
+                                <div className="flex items-center gap-4">
+                                    <Link to="/dashboard/posts/new" className="text-sm font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                                        Write Story
+                                    </Link>
+                                    <Link to="/dashboard">
+                                        <Button variant="default" size="sm" className="rounded-full font-bold px-5">
+                                            Dashboard
+                                        </Button>
+                                    </Link>
+                                </div>
                             ) : (
                                 <div className="flex items-center gap-3">
                                     <Link to="/login">
@@ -69,9 +75,14 @@ export const PublicLayout: React.FC = () => {
                         <Link to="/about" className="block text-lg font-bold text-foreground">About</Link>
                         <hr className="border-gray-50" />
                         {user ? (
-                            <Link to="/dashboard" className="block">
-                                <Button className="w-full rounded-xl py-6 font-bold text-lg">Dashboard</Button>
-                            </Link>
+                            <div className="space-y-3">
+                                <Link to="/dashboard/posts/new" className="block">
+                                    <Button variant="outline" className="w-full rounded-xl py-6 font-bold text-lg">Write Story</Button>
+                                </Link>
+                                <Link to="/dashboard" className="block">
+                                    <Button className="w-full rounded-xl py-6 font-bold text-lg">Dashboard</Button>
+                                </Link>
+                            </div>
                         ) : (
                             <div className="grid grid-cols-2 gap-4">
                                 <Link to="/login">
